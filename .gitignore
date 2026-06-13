@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+
+# Temporary full clone of MuJoCo Menagerie
+external/
+
+# Editor / OS files
+.vscode/
+.DS_Store
+
+# Temporary recordings
+*.mkv
+*.webm

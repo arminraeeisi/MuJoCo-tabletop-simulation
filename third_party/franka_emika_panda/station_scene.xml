@@ -1,0 +1,213 @@
+<mujoco model="panda scene">
+  <include file="panda.xml"/>
+
+  <statistic center="0.3 0 0.4" extent="1"/>
+
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="120" elevation="-20"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+  
+    <!-- Optional Fusion 360 authored tray mesh.
+         The STL is expected to be exported in millimeters, therefore scale is 0.001. -->
+    <mesh name="custom_tray_mesh"
+          file="custom_tray.stl"
+          scale="0.001 0.001 0.001"/>
+
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
+  
+    <!-- ================= AlphaIgnis tabletop data-collection station ================ -->
+
+    <!-- Tabletop workspace. All dimensions are in meters. -->
+    <body name="data_collection_table" pos="0.65 0 0.36">
+      <geom name="tabletop"
+            type="box"
+            size="0.45 0.35 0.03"
+            rgba="0.55 0.45 0.35 1"
+            friction="1.0 0.005 0.0001"/>
+
+      <geom name="table_leg_front_left"
+            type="box"
+            pos="0.35 0.25 -0.20"
+            size="0.025 0.025 0.20"
+            rgba="0.25 0.25 0.25 1"/>
+
+      <geom name="table_leg_front_right"
+            type="box"
+            pos="0.35 -0.25 -0.20"
+            size="0.025 0.025 0.20"
+            rgba="0.25 0.25 0.25 1"/>
+
+      <geom name="table_leg_back_left"
+            type="box"
+            pos="-0.35 0.25 -0.20"
+            size="0.025 0.025 0.20"
+            rgba="0.25 0.25 0.25 1"/>
+
+      <geom name="table_leg_back_right"
+            type="box"
+            pos="-0.35 -0.25 -0.20"
+            size="0.025 0.025 0.20"
+            rgba="0.25 0.25 0.25 1"/>
+    </body>
+
+            <!-- Invisible primitive collision tray.
+         The Fusion 360 STL tray is used for visual appearance.
+         These simple box geoms provide stable physical contact. -->
+    <body name="primitive_object_tray" pos="0.65 0 0.390">
+      <!-- Tray base: 300 mm x 200 mm x 10 mm -->
+      <geom name="tray_base"
+            type="box"
+            pos="0 0 0.005"
+            size="0.150 0.100 0.005"
+            rgba="0 0 0 0"
+            friction="1.0 0.005 0.0001"/>
+
+      <!-- Tray walls: approximately 40 mm high, 10 mm thick -->
+      <geom name="tray_wall_left"
+            type="box"
+            pos="0 0.095 0.030"
+            size="0.150 0.005 0.020"
+            rgba="0 0 0 0"
+            friction="1.0 0.005 0.0001"/>
+
+      <geom name="tray_wall_right"
+            type="box"
+            pos="0 -0.095 0.030"
+            size="0.150 0.005 0.020"
+            rgba="0 0 0 0"
+            friction="1.0 0.005 0.0001"/>
+
+      <geom name="tray_wall_front"
+            type="box"
+            pos="0.145 0 0.030"
+            size="0.005 0.090 0.020"
+            rgba="0 0 0 0"
+            friction="1.0 0.005 0.0001"/>
+
+      <geom name="tray_wall_back"
+            type="box"
+            pos="-0.145 0 0.030"
+            size="0.005 0.090 0.020"
+            rgba="0 0 0 0"
+            friction="1.0 0.005 0.0001"/>
+    </body>
+
+    <!-- Three free manipulation objects for meaningful interaction/data collection. -->
+    <body name="red_cube" pos="0.58 -0.06 0.435">
+      <freejoint/>
+      <geom name="red_cube_geom"
+            type="box"
+            size="0.025 0.025 0.025"
+            mass="0.05"
+            rgba="0.9 0.1 0.1 1"
+            friction="1.0 0.005 0.0001"/>
+    </body>
+
+    <body name="blue_cylinder" pos="0.68 0.04 0.450">
+      <freejoint/>
+      <geom name="blue_cylinder_geom"
+            type="cylinder"
+            size="0.025 0.04"
+            mass="0.07"
+            rgba="0.1 0.2 0.9 1"
+            friction="1.0 0.005 0.0001"/>
+    </body>
+
+    <body name="green_cube" pos="0.73 -0.03 0.432">
+      <freejoint/>
+      <geom name="green_cube_geom"
+            type="box"
+            size="0.022 0.022 0.022"
+            mass="0.04"
+            rgba="0.1 0.8 0.2 1"
+            friction="1.0 0.005 0.0001"/>
+    </body>
+
+            <!-- Overhead camera stand to represent a data-collection sensor setup.
+         The pole is fixed on the table and the camera is placed above the tray. -->
+    <body name="camera_stand" pos="0.86 -0.22 0.740">
+      <!-- Vertical pole: bottom touches table surface at z = 0.39 -->
+      <geom name="camera_stand_vertical"
+            type="cylinder"
+            size="0.015 0.35"
+            rgba="0.05 0.05 0.05 1"/>
+
+      <!-- Connector at the top of the pole to hide any visual gap -->
+      <geom name="camera_stand_top_connector"
+            type="box"
+            pos="0 0 0.35"
+            size="0.025 0.025 0.018"
+            rgba="0.05 0.05 0.05 1"/>
+
+      <!-- Diagonal arm from the pole toward the tray center -->
+      <geom name="camera_stand_arm"
+            type="box"
+            pos="-0.105 0.11 0.35"
+            size="0.17 0.012 0.012"
+            euler="0 0 2.333"
+            rgba="0.05 0.05 0.05 1"/>
+
+      <!-- Camera body above the tray -->
+      <geom name="camera_body"
+            type="box"
+            pos="-0.21 0.22 0.31"
+            size="0.04 0.03 0.035"
+            rgba="0.02 0.02 0.02 1"/>
+
+      <!-- Downward-facing lens -->
+      <geom name="camera_lens"
+            type="cylinder"
+            pos="-0.21 0.22 0.270"
+            size="0.012 0.025"
+            rgba="0.0 0.0 0.0 1"/>
+    </body>
+
+    <!-- Simple calibration board / visual reference target. -->
+    <body name="calibration_board" pos="0.92 0.18 0.480">
+      <geom name="calibration_board_panel"
+            type="box"
+            size="0.006 0.13 0.09"
+            rgba="0.85 0.85 0.75 1"/>
+      <geom name="calibration_board_marker_1"
+            type="box"
+            pos="-0.007 -0.06 0.04"
+            size="0.002 0.02 0.02"
+            rgba="0.05 0.05 0.05 1"/>
+      <geom name="calibration_board_marker_2"
+            type="box"
+            pos="-0.007 0.00 0.00"
+            size="0.002 0.02 0.02"
+            rgba="0.05 0.05 0.05 1"/>
+      <geom name="calibration_board_marker_3"
+            type="box"
+            pos="-0.007 0.06 -0.04"
+            size="0.002 0.02 0.02"
+            rgba="0.05 0.05 0.05 1"/>
+    </body>
+
+
+    <!-- Optional visual mesh authored in Fusion 360.
+         Physics contacts are handled by invisible primitive tray geoms above for stability. -->
+    <body name="fusion360_tray_visual" pos="0.65 0 0.39">
+      <geom name="fusion360_tray_visual_geom"
+            type="mesh"
+            mesh="custom_tray_mesh"
+            rgba="0.04 0.04 0.04 1"
+            contype="0"
+            conaffinity="0"/>
+    </body>
+
+  </worldbody>
+</mujoco>
