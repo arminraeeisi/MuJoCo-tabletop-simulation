@@ -1,29 +1,28 @@
-# MuJoCo Simulation Scene Setup — Working Student Challenge
+# MuJoCo Simulation Scene Setup
 
-## Scene choice
+## Short explanation
 
-I created a tabletop robotic data-collection station with a Franka Panda robot, a work table, a custom object tray, simple manipulation objects, an overhead camera stand, and a calibration board.
+I chose a tabletop robotic data-collection station because it represents a realistic setup for robot manipulation and perception tasks. The scene contains a Franka Panda robot positioned in front of a table, a tray with simple manipulation objects, an overhead camera stand, and a calibration board. The tray defines a repeatable workspace for object interaction, while the camera stand and calibration board represent the visual data-collection and calibration infrastructure that would be useful for sim-to-real alignment.
 
-I chose this scene because it represents a realistic setup for collecting robotic manipulation and perception data. The robot can interact with objects in the tray, while the camera stand and calibration board represent supporting infrastructure for visual data collection, calibration, and sim-to-real alignment.
+The Franka Panda model is sourced from MuJoCo Menagerie. I modeled the object tray in Fusion 360 and exported it as an STL mesh to demonstrate a simple CAD-to-simulation asset pipeline. For stable physics, I used simplified invisible MuJoCo box geoms as collision geometry for the tray, while the STL mesh is used as the visual representation. The remaining station elements are modeled with MuJoCo primitive geoms because they are simple, robust, and easy to scale.
 
-## Design decisions
-
-The Franka Panda robot model is sourced from MuJoCo Menagerie. I used this model because it provides a high-quality pre-converted MJCF description with meshes, joints, actuators, and associated files.
-
-For the station assets, I used a combination of MuJoCo primitive geometries and one authored CAD asset. The table, camera stand, manipulation objects, and calibration board are modeled with primitive MuJoCo geoms because they are simple, stable for physics simulation, easy to scale, and do not introduce unnecessary mesh or licensing complexity.
-
-As a bonus asset, I modeled the object tray in Fusion 360 and exported it as an STL mesh. In the MuJoCo scene, the tray mesh is used as the visual representation, while simplified primitive box geometries are used as invisible collision geometry. This separates visual fidelity from contact stability and makes the simulation easier to debug.
-
-All scene dimensions are in meters. Object poses, scales, and masses were chosen to be plausible for a tabletop manipulation setup.
+With more time, I would add calibrated camera parameters, image observations, randomized object poses, more realistic contact/material parameters, and a scripted data-collection routine. I would also compare the simulated robot/object behavior with measurements from a real station to improve sim-to-real alignment.
 
 ## How to run
 
 Tested on Ubuntu.
 
-```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 python scripts/prepare_scene.py
 python run_viewer.py
+
+To test the minimal Gymnasium-style environment:
+
+python env.py
+
+## GitHub repository
+
+https://github.com/arminraeeisi/MuJoCo-tabletop-simulation.git
