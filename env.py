@@ -71,9 +71,8 @@ class PandaDataCollectionEnv(gym.Env):
         Observation vector:
         - qpos: generalized positions
         - qvel: generalized velocities
-
-        This is simple but valid for a minimal environment wrapper.
         """
+        
         return np.concatenate([self.data.qpos, self.data.qvel]).astype(np.float32)
 
     def reset(

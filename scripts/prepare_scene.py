@@ -18,7 +18,7 @@ CUSTOM_TRAY_PATH = PROJECT_ROOT / "scene" / "assets" / "custom_tray.stl"
 
 
 STATION_BLOCK = """
-    <!-- ================= AlphaIgnis tabletop data-collection station ================ -->
+    <!-- ================= Tabletop data-collection station ================ -->
 
     <!-- Tabletop workspace. All dimensions are in meters. -->
     <body name="data_collection_table" pos="0.65 0 0.36">
@@ -53,9 +53,9 @@ STATION_BLOCK = """
             rgba="0.25 0.25 0.25 1"/>
     </body>
 
-            <!-- Invisible primitive collision tray.
-         The Fusion 360 STL tray is used for visual appearance.
-         These simple box geoms provide stable physical contact. -->
+    <!-- Invisible primitive collision tray.
+    The Fusion 360 STL tray is used for visual appearance.
+    These box geoms provide stable physical contact. -->
     <body name="primitive_object_tray" pos="0.65 0 0.390">
       <!-- Tray base: 300 mm x 200 mm x 10 mm -->
       <geom name="tray_base"
@@ -95,7 +95,7 @@ STATION_BLOCK = """
             friction="1.0 0.005 0.0001"/>
     </body>
 
-    <!-- Three free manipulation objects for meaningful interaction/data collection. -->
+    <!-- Three free manipulation objects for interaction/data collection. -->
     <body name="red_cube" pos="0.58 -0.06 0.435">
       <freejoint/>
       <geom name="red_cube_geom"
@@ -126,8 +126,7 @@ STATION_BLOCK = """
             friction="1.0 0.005 0.0001"/>
     </body>
 
-            <!-- Overhead camera stand to represent a data-collection sensor setup.
-         The pole is fixed on the table and the camera is placed above the tray. -->
+    <!-- Overhead camera stand to represent a data-collection sensor setup. -->
     <body name="camera_stand" pos="0.86 -0.22 0.740">
       <!-- Vertical pole: bottom touches table surface at z = 0.39 -->
       <geom name="camera_stand_vertical"
@@ -135,7 +134,7 @@ STATION_BLOCK = """
             size="0.015 0.35"
             rgba="0.05 0.05 0.05 1"/>
 
-      <!-- Connector at the top of the pole to hide any visual gap -->
+      <!-- Connector at the top of the pole -->
       <geom name="camera_stand_top_connector"
             type="box"
             pos="0 0 0.35"
@@ -191,8 +190,8 @@ STATION_BLOCK = """
 
 
 CUSTOM_TRAY_ASSET = """
-    <!-- Optional Fusion 360 authored tray mesh.
-         The STL is expected to be exported in millimeters, therefore scale is 0.001. -->
+    <!-- Fusion 360 authored tray mesh.
+         The STL is exported in millimeters, therefore scale is 0.001. -->
     <mesh name="custom_tray_mesh"
           file="custom_tray.stl"
           scale="0.001 0.001 0.001"/>
@@ -200,8 +199,8 @@ CUSTOM_TRAY_ASSET = """
 
 
 CUSTOM_TRAY_VISUAL_BODY = """
-    <!-- Optional visual mesh authored in Fusion 360.
-         Physics contacts are handled by invisible primitive tray geoms above for stability. -->
+    <!-- Visual mesh authored in Fusion 360.
+         Physics contacts are handled by invisible primitive tray geoms above. -->
     <body name="fusion360_tray_visual" pos="0.65 0 0.39">
       <geom name="fusion360_tray_visual_geom"
             type="mesh"
