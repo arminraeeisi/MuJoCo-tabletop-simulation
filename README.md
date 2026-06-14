@@ -15,11 +15,13 @@ Tested on Ubuntu.
 Create and activate a Python virtual environment:
 
 python3 -m venv .venv
+
 source .venv/bin/activate
 
 Install dependencies:
 
 pip install --upgrade pip
+
 pip install -r requirements.txt
 
 Prepare the scene:
@@ -41,7 +43,9 @@ The Franka Panda can be moved manually through the MuJoCo viewer's Control panel
 ## Asset sources and licensing
 
 Franka Panda MJCF model: MuJoCo Menagerie.
+
 Custom object tray: authored in Fusion 360 and exported as STL.
+
 Table, camera stand, calibration board, and simple manipulation objects: authored as MuJoCo primitive geoms.
 
 Relevant open-source license files are included in the licenses folder.
