@@ -2,9 +2,11 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-
+import re
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+ROBOT_BASE_HEIGHT = 0.08
 
 EXTERNAL_DIR = PROJECT_ROOT / "external"
 MENAGERIE_DIR = EXTERNAL_DIR / "mujoco_menagerie"
@@ -19,6 +21,14 @@ CUSTOM_TRAY_PATH = PROJECT_ROOT / "scene" / "assets" / "custom_tray.stl"
 
 STATION_BLOCK = """
     <!-- ================= Tabletop data-collection station ================ -->
+
+    <body name="robot_base_platform" pos="0 0 0.040">
+      <geom name="robot_base_platform_geom"
+            type="box"
+            size="0.22 0.22 0.040"
+            rgba="0.25 0.25 0.25 1"
+            friction="1.0 0.005 0.0001"/>
+    </body>
 
     <!-- Tabletop workspace. All dimensions are in meters. -->
     <body name="data_collection_table" pos="0.65 0 0.36">
@@ -246,6 +256,30 @@ def copy_panda_model() -> None:
     shutil.copytree(PANDA_SOURCE_DIR, PANDA_TARGET_DIR)
     print(f"Copied Franka Panda model to: {PANDA_TARGET_DIR}")
 
+def raise_panda_base() -> None:
+    """
+    Raise the Franka Panda base so it sits on top of the robot platform.
+
+    The platform is added to the world as a visual/collision box. The robot
+    root body in panda.xml is then shifted upward by the same height.
+    """
+    panda_xml_path = PANDA_TARGET_DIR / "panda.xml"
+
+    if not panda_xml_path.exists():
+        raise FileNotFoundError(f"Missing Panda XML file: {panda_xml_path}")
+
+    xml = panda_xml_path.read_text()
+
+    pattern = r'(<body\s+name="link0"\s+childclass="panda")(\s*>)'
+    replacement = rf'\1 pos="0 0 {ROBOT_BASE_HEIGHT:.3f}"\2'
+
+    xml, count = re.subn(pattern, replacement, xml, count=1)
+
+    if count != 1:
+        raise ValueError("Could not find Panda root body link0 in panda.xml.")
+
+    panda_xml_path.write_text(xml)
+    print(f"Raised Panda base by {ROBOT_BASE_HEIGHT:.3f} m.")
 
 def create_station_scene() -> None:
     source_scene_path = PANDA_TARGET_DIR / "scene.xml"
@@ -302,6 +336,7 @@ def main() -> None:
     try:
         clone_menagerie()
         copy_panda_model()
+        raise_panda_base()
         create_station_scene()
         copy_licenses()
         print("\nScene preparation complete.")

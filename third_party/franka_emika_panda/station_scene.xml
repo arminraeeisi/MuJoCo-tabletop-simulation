@@ -29,6 +29,14 @@
   
     <!-- ================= Tabletop data-collection station ================ -->
 
+    <body name="robot_base_platform" pos="0 0 0.040">
+      <geom name="robot_base_platform_geom"
+            type="box"
+            size="0.22 0.22 0.040"
+            rgba="0.25 0.25 0.25 1"
+            friction="1.0 0.005 0.0001"/>
+    </body>
+
     <!-- Tabletop workspace. All dimensions are in meters. -->
     <body name="data_collection_table" pos="0.65 0 0.36">
       <geom name="tabletop"
