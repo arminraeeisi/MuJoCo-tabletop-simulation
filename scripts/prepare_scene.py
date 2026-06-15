@@ -17,6 +17,7 @@ PANDA_TARGET_DIR = THIRD_PARTY_DIR / "franka_emika_panda"
 
 LICENSES_DIR = PROJECT_ROOT / "licenses"
 CUSTOM_TRAY_PATH = PROJECT_ROOT / "scene" / "assets" / "custom_tray.stl"
+BOTTLE_PATH = PROJECT_ROOT / "scene" / "assets" / "bottle.stl"
 
 
 STATION_BLOCK = """
@@ -198,6 +199,36 @@ STATION_BLOCK = """
     </body>
 """
 
+BOTTLE_ASSET = """
+    <!-- Fusion 360 authored bottle mesh.
+         The STL is exported in millimeters, therefore scale is 0.001. -->
+    <mesh name="fusion360_bottle_mesh"
+          file="bottle.stl"
+          scale="0.001 0.001 0.001"/>
+"""
+
+BOTTLE_BODY = """
+    <body name="fusion360_bottle" pos="0.58 0.055 0.400">
+      <freejoint/>
+
+      <!-- Fusion 360 bottle mesh used for visual appearance only. -->
+      <geom name="fusion360_bottle_visual"
+            type="mesh"
+            mesh="fusion360_bottle_mesh"
+            rgba="0.10 0.35 0.90 1"
+            contype="0"
+            conaffinity="0"/>
+
+      <!-- Simplified collision geometry for stable physics. -->
+      <geom name="fusion360_bottle_collision_body"
+            type="cylinder"
+            pos="0 0 0.055"
+            size="0.017 0.055"
+            mass="0.06"
+            rgba="0 0 0 0"
+            friction="1.0 0.005 0.0001"/>
+    </body>
+"""
 
 CUSTOM_TRAY_ASSET = """
     <!-- Fusion 360 authored tray mesh.
@@ -287,21 +318,38 @@ def create_station_scene() -> None:
 
     xml = source_scene_path.read_text()
 
+    panda_assets_dir = PANDA_TARGET_DIR / "assets"
+    panda_assets_dir.mkdir(parents=True, exist_ok=True)
+
+    station_block = STATION_BLOCK
+
     if CUSTOM_TRAY_PATH.exists():
-        panda_assets_dir = PANDA_TARGET_DIR / "assets"
-        panda_assets_dir.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(CUSTOM_TRAY_PATH, panda_assets_dir / "custom_tray.stl")
 
         if "</asset>" not in xml:
             raise RuntimeError("Could not find </asset> in Panda scene.xml.")
+
         xml = xml.replace("</asset>", CUSTOM_TRAY_ASSET + "\n  </asset>", 1)
 
-        station_block = STATION_BLOCK + "\n" + CUSTOM_TRAY_VISUAL_BODY
+        station_block += "\n" + CUSTOM_TRAY_VISUAL_BODY
         print("Custom Fusion 360 tray found. Adding visual mesh to scene.")
 
     else:
-        station_block = STATION_BLOCK
         print("No custom_tray.stl found yet. Creating scene with primitive tray only.")
+
+    if BOTTLE_PATH.exists():
+        shutil.copyfile(BOTTLE_PATH, panda_assets_dir / "bottle.stl")
+
+        if "</asset>" not in xml:
+            raise RuntimeError("Could not find </asset> in Panda scene.xml.")
+
+        xml = xml.replace("</asset>", BOTTLE_ASSET + "\n  </asset>", 1)
+
+        station_block += "\n" + BOTTLE_BODY
+        print("Fusion 360 bottle found. Adding visual mesh to scene.")
+
+    else:
+        print("No bottle.stl found. Creating scene without Fusion 360 bottle.")
 
     if "</worldbody>" not in xml:
         raise RuntimeError("Could not find </worldbody> in Panda scene.xml.")

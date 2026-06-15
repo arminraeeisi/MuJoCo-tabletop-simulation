@@ -21,6 +21,13 @@
           file="custom_tray.stl"
           scale="0.001 0.001 0.001"/>
 
+  
+    <!-- Fusion 360 authored bottle mesh.
+         The STL is exported in millimeters, therefore scale is 0.001. -->
+    <mesh name="fusion360_bottle_mesh"
+          file="bottle.stl"
+          scale="0.001 0.001 0.001"/>
+
   </asset>
 
   <worldbody>
@@ -214,6 +221,28 @@
             rgba="0.04 0.04 0.04 1"
             contype="0"
             conaffinity="0"/>
+    </body>
+
+
+    <body name="fusion360_bottle" pos="0.58 0.055 0.400">
+      <freejoint/>
+
+      <!-- Fusion 360 bottle mesh used for visual appearance only. -->
+      <geom name="fusion360_bottle_visual"
+            type="mesh"
+            mesh="fusion360_bottle_mesh"
+            rgba="0.10 0.35 0.90 1"
+            contype="0"
+            conaffinity="0"/>
+
+      <!-- Simplified collision geometry for stable physics. -->
+      <geom name="fusion360_bottle_collision_body"
+            type="cylinder"
+            pos="0 0 0.055"
+            size="0.017 0.055"
+            mass="0.06"
+            rgba="0 0 0 0"
+            friction="1.0 0.005 0.0001"/>
     </body>
 
   </worldbody>
