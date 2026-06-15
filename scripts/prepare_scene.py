@@ -290,9 +290,6 @@ def copy_panda_model() -> None:
 def raise_panda_base() -> None:
     """
     Raise the Franka Panda base so it sits on top of the robot platform.
-
-    The platform is added to the world as a visual/collision box. The robot
-    root body in panda.xml is then shifted upward by the same height.
     """
     panda_xml_path = PANDA_TARGET_DIR / "panda.xml"
 
