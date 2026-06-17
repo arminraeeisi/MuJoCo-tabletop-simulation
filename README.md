@@ -6,7 +6,7 @@ I chose a tabletop robotic data collection station because it represents a reali
 
 The Franka Panda model is sourced from MuJoCo Menagerie. I modeled the object tray and bottle in Fusion 360 and exported it as STL meshes to demonstrate a simple CAD to simulation asset pipeline. The robot is mounted on a small base platform to better align the Panda working height with the tabletop station. For stable physics, I used invisible MuJoCo primitive geoms as collision geometry for the tray and bottle, while the STL meshes are used as the visual representations. The remaining station elements are modeled with MuJoCo primitive geoms because they are simple, robust, and easy to scale.
 
-With more time, I would add calibrated camera parameters, image observations, randomized object poses, more realistic contact/material parameters, and a scripted data collection routine. I would also compare the simulated robot/object behavior with measurements from a real station to improve sim to real alignment.
+With more time, I would add calibrated camera parameters, image observations, randomized object poses and a scripted data collection routine. I would also compare the simulated robot/object behavior with measurements from a real station to improve sim to real alignment.
 
 ## How to run
 
